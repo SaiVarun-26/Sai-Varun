@@ -1,5 +1,5 @@
 from sqlalchemy import Boolean, Column, Integer, String
-
+from sqlalchemy.orm import relationship
 from app.database.database import Base
 
 
@@ -12,3 +12,9 @@ class User(Base):
     password = Column(String(255), nullable=False)
     role = Column(String(50), nullable=False)
     is_active = Column(Boolean, default=True, nullable=False)
+
+    contracts = relationship("Contract", back_populates="user")
+    notifications = relationship("Notification", back_populates="user")
+    reports = relationship("Report", back_populates="user")
+    audit_logs = relationship("AuditLog", back_populates="user")
+    activities = relationship("Activity", back_populates="user")

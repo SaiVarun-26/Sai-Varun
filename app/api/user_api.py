@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.database.database import get_db
@@ -61,7 +61,7 @@ def get_user(
     user = db.query(User).filter(User.id == user_id).first()
 
     if not user:
-        return {"message": "User not found"}
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
     return user
 
@@ -79,7 +79,7 @@ def update_user(
     user = db.query(User).filter(User.id == user_id).first()
 
     if not user:
-        return {"message": "User not found"}
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
     hashed_password = hash_password(user_data.password)
 
