@@ -15,9 +15,9 @@ class Contract(Base):
     contract_value = Column(Float)
     status = Column(String(50))
 
-    created_by = Column(Integer, ForeignKey("users.id"))
+    created_by = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"))
 
-    user = relationship("User", back_populates="contracts")
+    user = relationship("User", back_populates="contracts", passive_deletes=True)
 
     contract_versions = relationship("ContractVersion", back_populates="contract")
     obligations = relationship("Obligation", back_populates="contract")

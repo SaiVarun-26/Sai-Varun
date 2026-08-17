@@ -14,6 +14,6 @@ class Obligation(Base):
     due_date = Column(Date)
     priority = Column(String(20))
     status = Column(String(50))
-    assigned_to = Column(Integer, ForeignKey("users.id"))
+    assigned_to = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"))
 
     contract = relationship("Contract", back_populates="obligations")   

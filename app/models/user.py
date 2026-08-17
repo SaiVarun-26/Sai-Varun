@@ -13,8 +13,8 @@ class User(Base):
     role = Column(String(50), nullable=False)
     is_active = Column(Boolean, default=True, nullable=False)
 
-    contracts = relationship("Contract", back_populates="user")
-    notifications = relationship("Notification", back_populates="user")
-    reports = relationship("Report", back_populates="user")
-    audit_logs = relationship("AuditLog", back_populates="user")
-    activities = relationship("Activity", back_populates="user")
+    contracts = relationship("Contract", back_populates="user", passive_deletes=True)
+    notifications = relationship("Notification", back_populates="user", passive_deletes=True)
+    reports = relationship("Report", back_populates="user", passive_deletes=True)
+    audit_logs = relationship("AuditLog", back_populates="user", passive_deletes=True)
+    activities = relationship("Activity", back_populates="user", passive_deletes=True)
