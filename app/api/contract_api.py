@@ -3,8 +3,11 @@ from sqlalchemy.orm import Session
 
 from app.database.database import get_db
 from app.models.contract import Contract
-from app.schemas.contract_schema import ContractCreate, ContractResponse
-
+from app.schemas.contract_schema import (
+    ContractCreate,
+    ContractResponse
+)
+from app.core.auth import get_current_user
 
 router = APIRouter(
     prefix="/contracts",
@@ -19,16 +22,29 @@ router = APIRouter(
 )
 def create_contract(
     contract_data: ContractCreate,
+    current_user=Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
+    # Check duplicate contract number
+    existing = db.query(Contract).filter(
+        Contract.contract_number == contract_data.contract_number
+    ).first()
+
+    if existing:
+        raise HTTPException(
+            status_code=400,
+            detail="Contract number already exists"
+        )
+
     contract = Contract(
+        title=contract_data.title,
         contract_number=contract_data.contract_number,
-        vendor_name=contract_data.vendor_name,
+        category=contract_data.category,
+        description=contract_data.description,
         start_date=contract_data.start_date,
         end_date=contract_data.end_date,
-        contract_value=contract_data.contract_value,
-        status=contract_data.status,
-        created_by=contract_data.created_by
+        status="Draft",
+        created_by=current_user.id
     )
 
     db.add(contract)
@@ -44,6 +60,7 @@ def create_contract(
     status_code=status.HTTP_200_OK
 )
 def get_contracts(
+    current_user=Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     contracts = db.query(Contract).all()
@@ -57,6 +74,7 @@ def get_contracts(
 )
 def get_contract(
     contract_id: int,
+    current_user=Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     contract = db.query(Contract).filter(
