@@ -1,5 +1,13 @@
-from sqlalchemy import Column, Integer, String, Date, ForeignKey
+from sqlalchemy import (
+    Column,
+    Integer,
+    String,
+    Date,
+    DateTime,
+    ForeignKey
+)
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 
 from app.database.database import Base
 
@@ -8,12 +16,63 @@ class Obligation(Base):
     __tablename__ = "obligations"
 
     id = Column(Integer, primary_key=True, index=True)
-    contract_id = Column(Integer, ForeignKey("contracts.id"))
-    title = Column(String(255))
-    description = Column(String(500))
-    due_date = Column(Date)
-    priority = Column(String(20))
-    status = Column(String(50))
-    assigned_to = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"))
 
-    contract = relationship("Contract", back_populates="obligations")   
+    contract_id = Column(
+        Integer,
+        ForeignKey("contracts.id", ondelete="CASCADE"),
+        nullable=False
+    )
+
+    title = Column(
+        String(255),
+        nullable=False
+    )
+
+    description = Column(
+        String(500)
+    )
+
+    obligation_type = Column(
+        String(100),
+        nullable=False
+    )
+
+    due_date = Column(
+        Date,
+        nullable=False
+    )
+
+    assigned_to = Column(
+        Integer,
+        ForeignKey("users.id", ondelete="SET NULL")
+    )
+
+    status = Column(
+        String(50),
+        default="Pending",
+        nullable=False
+    )
+
+    completion_date = Column(Date)
+
+    created_at = Column(
+        DateTime(timezone=True),
+        server_default=func.now()
+    )
+
+    updated_at = Column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now()
+    )
+
+    # Relationships
+    contract = relationship(
+        "Contract",
+        back_populates="obligations"
+    )
+
+    user = relationship(
+        "User",
+        back_populates="obligations"
+    )

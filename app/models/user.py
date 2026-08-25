@@ -20,6 +20,12 @@ class User(Base):
         back_populates="user",
         passive_deletes=True
     )
+    
+    obligations = relationship(
+    "Obligation",
+    back_populates="user",
+    passive_deletes=True
+    )
 
     assigned_contracts = relationship(
         "Contract",
