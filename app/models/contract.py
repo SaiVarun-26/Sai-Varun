@@ -37,6 +37,22 @@ class Contract(Base):
         ForeignKey("users.id", ondelete="SET NULL")
     )
 
+    assigned_to = Column(
+        Integer,
+        ForeignKey("users.id", ondelete="SET NULL"),
+        nullable=True
+    )
+
+    reviewed_at = Column(
+        DateTime(timezone=True),
+        nullable=True
+    )
+
+    approved_at = Column(
+        DateTime(timezone=True),
+        nullable=True
+    )
+
     created_at = Column(
         DateTime(timezone=True),
         server_default=func.now()
@@ -50,8 +66,14 @@ class Contract(Base):
 
     user = relationship(
         "User",
-        back_populates="contracts",
-        passive_deletes=True
+        foreign_keys=[created_by],
+        back_populates="contracts"
+    )
+
+    assigned_user = relationship(
+        "User",
+        foreign_keys=[assigned_to],
+        back_populates="assigned_contracts"
     )
 
     contract_versions = relationship(
