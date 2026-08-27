@@ -86,10 +86,10 @@ class Contract(Base):
         back_populates="contract"
     )
 
-    renewal = relationship(
-        "Renewal",
-        back_populates="contract",
-        uselist=False
+    renewals = relationship(
+    "Renewal",
+    back_populates="contract",
+    cascade="all, delete-orphan"
     )
 
     notifications = relationship(

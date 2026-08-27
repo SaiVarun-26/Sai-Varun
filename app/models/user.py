@@ -57,3 +57,8 @@ class User(Base):
         back_populates="user",
         passive_deletes=True
     )
+    renewals = relationship(
+    "Renewal",
+    back_populates="user",
+    passive_deletes=True
+    )
