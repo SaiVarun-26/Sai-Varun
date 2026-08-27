@@ -11,6 +11,7 @@ from app.api.report_api import router as report_router
 from app.api.audit_log_api import router as audit_log_router
 from app.api.activity_api import router as activity_router
 from app.api.auth_api import router as auth_router
+from app.api.compliance_api import router as compliance_router
 app = FastAPI(
     title="ContractIQ API",
     version="1.0.0"
@@ -32,6 +33,7 @@ app.include_router(report_router)
 app.include_router(audit_log_router)
 app.include_router(activity_router)
 app.include_router(auth_router)
+app.include_router(compliance_router)
 @app.get("/")
 def root():
     return {
